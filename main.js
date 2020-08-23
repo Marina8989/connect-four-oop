@@ -15,4 +15,20 @@ class Game{
            this.board.push(Array.from({length: width}));
         }
     }
+
+    makeHTMLBoard() {
+        const board = document.getElementById('board');
+        board.innrHTML = '';
+        const top = document.createElement('tr');
+        top.setAttribute('id', 'column-top');
+        this.handleGameClick = this.handleGAmeClick.bind(this);
+        top.addEventListener('click', this.handleGameClick);
+
+        for(let x = 0; x < this.width; x++) {
+          const headCell = document.createElement('td');
+          headCell.setAttribute('id', x);
+          top.append(headCell);
+        }
+        board.append(top);
+    }
 }
