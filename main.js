@@ -5,23 +5,23 @@ class Game{
        this.width = width;
        this.currPlayer = p1;
        this.makeBoard();
-       this.makeHTMLBoard();
-       this.gameOver() = false;
+       this.makeHtmlBoard();
+       this.gameOver = false;
     }
 
     makeBoard() {
         this.board = [];
         for(let y = 0; y < this.height; y++){
-           this.board.push(Array.from({length: width}));
+           this.board.push(Array.from({length: this.width}));
         }
     }
 
-    makeHTMLBoard() {
+    makeHtmlBoard() {
         const board = document.getElementById('board');
-        board.innrHTML = '';
+        board.innerHTML = '';
         const top = document.createElement('tr');
         top.setAttribute('id', 'column-top');
-        this.handleGameClick = this.handleGAmeClick.bind(this);
+        this.handleGameClick = this.handleClick.bind(this);
         top.addEventListener('click', this.handleGameClick);
 
         for(let x = 0; x < this.width; x++) {
@@ -86,7 +86,8 @@ class Game{
           this.currPlayer = this.currPlayer === this.players[0] ? this.players[1] : this.players[0];
       }
       checkForWin() {
-          const _win = cell => cells.every(
+          const _win = cells =>
+              cells.every(
               ([y, x]) => y >= 0 &&
               y < this.height &&
               x >= 0 &&
@@ -96,8 +97,26 @@ class Game{
           for(let y = 0; y < this.height; y++) {
              for(let x = 0; x < this.width; x++) {
                const horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
+               const vert = [[y,x], [y + 1, x], [y + 2, x], [y + 3, x]];
+               const diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
+               const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3] ];
+
+               if(_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+                   return true;
+               }
              }
           }
       }
-
 }
+
+class Player {
+    constructor(color) {
+        this.color = color;
+    }
+}
+
+document.getElementById('start-game').addEventListener('click', ()=> {
+    let p1 = new Player(document.getElementById('p1-color').value);
+    let p2 = new Player(document.getElementById('p2-color').value);
+    new Game(p1, p2);
+});
